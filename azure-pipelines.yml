@@ -9,7 +9,7 @@ trigger:
 jobs:
 - job: Windows
   pool:
-      vmImage: vs2017-win2016
+    vmImage: vs2017-win2016
   steps:
     - task: CMake@1
       displayName: 'CMake [VS2017]'
@@ -25,7 +25,7 @@ jobs:
         msbuildArchitecture: x64
 
     - script: 'ctest -C Release'
-      workingDirectory: ./build/mac/
+      workingDirectory: ./build/win/
       displayName: 'Run Unit Tests'
 
     - task: CopyFiles@2
@@ -33,6 +33,42 @@ jobs:
       inputs:
         SourceFolder: '$(system.defaultworkingdirectory)'
         Contents: '$(artifacts.Windows)'
+        TargetFolder: '$(build.artifactstagingdirectory)'
+      condition: succeededOrFailed()
+
+    - task: PublishBuildArtifacts@1
+      displayName: 'Publish Artifact: $(system.teamProject)'
+      inputs:
+        PathtoPublish: '$(build.artifactstagingdirectory)'
+        ArtifactName: '$(system.teamProject)'
+      condition: succeededOrFailed()
+
+- job: Linux
+  pool:
+    vmImage: ubuntu-16.04
+  steps:
+    - script: 'alias python=python3'
+      displayName: 'alias python'
+
+    - task: CMake@1
+      displayName: 'CMake [Unix]'
+      inputs:
+        workingDirectory: build/linux
+        cmakeArgs: '-G "Unix Makefiles" ../..'
+
+    - script: make
+      workingDirectory: build/linux
+      displayName: 'Makefile Build'
+
+    - script: 'ctest -C Release'
+      workingDirectory: ./build/linux/
+      displayName: 'Run Unit Tests'
+
+    - task: CopyFiles@2
+      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)'
+        Contents: '$(artifacts.Linux)'
         TargetFolder: '$(build.artifactstagingdirectory)'
       condition: succeededOrFailed()
 
