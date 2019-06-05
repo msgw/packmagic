@@ -7,74 +7,110 @@ trigger:
 - master
 
 jobs:
+- job: MacOS
+  pool:
+    vmImage: macOS-10.14
+  steps:
+  - task: CMake@1
+    displayName: 'CMake [Xcode]'
+    inputs:
+      workingDirectory: build/mac
+      cmakeArgs: '-G "Xcode" ../..'
+
+  - task: Xcode@5
+    displayName: 'Xcode build'
+    inputs:
+      sdk: '$(MacSDK)'
+      xcWorkspacePath: './build/mac/*.xcodeproj/project.xcworkspace'
+      scheme: 'ALL_BUILD'
+
+  - script: 'ctest -C Release'
+    workingDirectory: ./build/mac/
+    displayName: 'Run Unit Tests'
+
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)'
+      Contents: '$(artifacts.Mac)'
+      TargetFolder: '$(build.artifactstagingdirectory)'
+    condition: succeededOrFailed()
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: $(system.teamProject)'
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)'
+      ArtifactName: '$(system.teamProject)'
+    condition: succeededOrFailed()
+
 - job: Windows
   pool:
     vmImage: vs2017-win2016
   steps:
-    - task: CMake@1
-      displayName: 'CMake [VS2017]'
-      inputs:
-        workingDirectory: build/win
-        cmakeArgs: '-G "Visual Studio 15 2017" -A x64 ../..'
+  - task: CMake@1
+    displayName: 'CMake [VS2017]'
+    inputs:
+      workingDirectory: build/win
+      cmakeArgs: '-G "Visual Studio 15 2017" -A x64 ../..'
 
-    - task: VSBuild@1
-      displayName: 'Visual Studio build'
-      inputs:
-        solution: 'build/win/*.sln'
-        vsVersion: 15.0
-        msbuildArchitecture: x64
+  - task: VSBuild@1
+    displayName: 'Visual Studio build'
+    inputs:
+      solution: 'build/win/*.sln'
+      vsVersion: 15.0
+      msbuildArchitecture: x64
 
-    - script: 'ctest -C Release'
-      workingDirectory: ./build/win/
-      displayName: 'Run Unit Tests'
+  - script: 'ctest -C Release'
+    workingDirectory: ./build/win/
+    displayName: 'Run Unit Tests'
 
-    - task: CopyFiles@2
-      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
-      inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)'
-        Contents: '$(artifacts.Windows)'
-        TargetFolder: '$(build.artifactstagingdirectory)'
-      condition: succeededOrFailed()
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)'
+      Contents: '$(artifacts.Windows)'
+      TargetFolder: '$(build.artifactstagingdirectory)'
+    condition: succeededOrFailed()
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: $(system.teamProject)'
-      inputs:
-        PathtoPublish: '$(build.artifactstagingdirectory)'
-        ArtifactName: '$(system.teamProject)'
-      condition: succeededOrFailed()
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: $(system.teamProject)'
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)'
+      ArtifactName: '$(system.teamProject)'
+    condition: succeededOrFailed()
 
 - job: Linux
   pool:
     vmImage: ubuntu-16.04
   steps:
-    - script: 'alias python=python3'
-      displayName: 'alias python'
+  - script: 'alias python=python3'
+    displayName: 'alias python'
 
-    - task: CMake@1
-      displayName: 'CMake [Unix]'
-      inputs:
-        workingDirectory: build/linux
-        cmakeArgs: '-G "Unix Makefiles" ../..'
-
-    - script: make
+  - task: CMake@1
+    displayName: 'CMake [Unix]'
+    inputs:
       workingDirectory: build/linux
-      displayName: 'Makefile Build'
+      cmakeArgs: '-G "Unix Makefiles" ../..'
 
-    - script: 'ctest -C Release'
-      workingDirectory: ./build/linux/
-      displayName: 'Run Unit Tests'
+  - script: make
+    workingDirectory: build/linux
+    displayName: 'Makefile Build'
 
-    - task: CopyFiles@2
-      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
-      inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)'
-        Contents: '$(artifacts.Linux)'
-        TargetFolder: '$(build.artifactstagingdirectory)'
-      condition: succeededOrFailed()
+  - script: 'ctest -C Release'
+    workingDirectory: ./build/linux/
+    displayName: 'Run Unit Tests'
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: $(system.teamProject)'
-      inputs:
-        PathtoPublish: '$(build.artifactstagingdirectory)'
-        ArtifactName: '$(system.teamProject)'
-      condition: succeededOrFailed()
+  - task: CopyFiles@2
+    displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+    inputs:
+      SourceFolder: '$(system.defaultworkingdirectory)'
+      Contents: '$(artifacts.Linux)'
+      TargetFolder: '$(build.artifactstagingdirectory)'
+    condition: succeededOrFailed()
+
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish Artifact: $(system.teamProject)'
+    inputs:
+      PathtoPublish: '$(build.artifactstagingdirectory)'
+      ArtifactName: '$(system.teamProject)'
+    condition: succeededOrFailed()
