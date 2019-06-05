@@ -11,9 +11,46 @@ strategy:
     linux:
       imageName: "ubuntu-16.04"
     mac:
-      imageName: "macos-10.14"
+      imageName: "macos-latest"
     windows:
-      imageName: "vs2017-win2016"
+      pool:
+        name: Hosted VS2017
+        demands:
+        - cmake
+        - msbuild
+        - visualstudio
+      steps:
+      - task: CMake@1
+        displayName: 'CMake [VS2017]'
+        inputs:
+          workingDirectory: build/win
+          cmakeArgs: '-G "Visual Studio 15 2017" -A x64 ../..'
+
+      - task: VSBuild@1
+        displayName: 'Visual Studio build'
+        inputs:
+          solution: 'build/win/*.sln'
+          vsVersion: 15.0
+          msbuildArchitecture: x64
+
+      - script: 'ctest -C Release'
+        workingDirectory: ./build/mac/
+        displayName: 'Run Unit Tests'
+
+      - task: CopyFiles@2
+        displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+        inputs:
+          SourceFolder: '$(system.defaultworkingdirectory)'
+          Contents: '$(artifacts.Windows)'
+          TargetFolder: '$(build.artifactstagingdirectory)'
+        condition: succeededOrFailed()
+
+      - task: PublishBuildArtifacts@1
+        displayName: 'Publish Artifact: $(system.teamProject)'
+        inputs:
+          PathtoPublish: '$(build.artifactstagingdirectory)'
+          ArtifactName: '$(system.teamProject)'
+        condition: succeededOrFailed()
   maxParallel: 3
 
 pool:
