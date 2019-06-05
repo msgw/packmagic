@@ -8,4 +8,4 @@ target_link_libraries(packmagic_unittest
     packmagic
 )
 
-add_test(unittest COMMAND packmagic_unittest)
+add_test(NAME unittest COMMAND packmagic_unittest)
