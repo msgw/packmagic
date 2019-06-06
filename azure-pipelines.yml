@@ -100,7 +100,7 @@ jobs:
     workingDirectory: ./build/linux/
     displayName: 'Run Unit Tests'
 
-  - script: 'ls ./build/linux'
+  - script: 'ls ./build/linux/src'
     workingDirectory: '$(system.defaultworkingdirectory)'
     displayName: 'list artifacts'
 
