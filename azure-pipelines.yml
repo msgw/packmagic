@@ -20,7 +20,7 @@ jobs:
   - task: Xcode@5
     displayName: 'Xcode build'
     inputs:
-      sdk: '$(MacSDK)'
+      sdk: 'macosx'
       xcWorkspacePath: './build/mac/*.xcodeproj/project.xcworkspace'
       scheme: 'ALL_BUILD'
 
