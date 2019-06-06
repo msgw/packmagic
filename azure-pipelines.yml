@@ -100,9 +100,9 @@ jobs:
     workingDirectory: ./build/linux/
     displayName: 'Run Unit Tests'
 
-  - script: 'echo $(artifacts.Linux)'
-    workingDirectory: ./build/linux/
-    displayName: 'echo artifacts'
+  - script: 'ls $(artifacts.Linux)'
+    workingDirectory: '$(system.defaultworkingdirectory)'
+    displayName: 'list artifacts'
 
   - task: CopyFiles@2
     displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
