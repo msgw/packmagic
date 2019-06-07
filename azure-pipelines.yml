@@ -11,22 +11,17 @@ jobs:
   pool:
     vmImage: macOS-10.14
   steps:
-  - task: CMake@1
-    displayName: 'CMake [Xcode]'
-    inputs:
-      workingDirectory: build/mac
-      cmakeArgs: '-G "Xcode" ../..'
+  - script: './generate-mac.sh'
+    workingDirectory: ./build
+    displayName: 'Generate Project [Mac]'
 
-  - task: Xcode@5
-    displayName: 'Xcode build'
-    inputs:
-      sdk: 'macosx'
-      xcWorkspacePath: './build/mac/*.xcodeproj/project.xcworkspace'
-      scheme: 'ALL_BUILD'
+  - script: './build-mac-all.sh'
+    workingDirectory: ./build
+    displayName: 'Build Project [Mac - All]'
 
-  - script: 'ctest -C Release'
-    workingDirectory: ./build/mac/
-    displayName: 'Run Unit Tests'
+  - script: './test-mac-all.sh'
+    workingDirectory: ./build
+    displayName: 'Run Unit Tests [Mac - All]'
 
   - task: CopyFiles@2
     displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
