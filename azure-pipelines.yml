@@ -19,18 +19,22 @@ jobs:
 
     - checkout: self
       submodules: "true"
+      condition: succeededOrFailed()
       
     - script: './generate-mac.sh'
       workingDirectory: ./build
       displayName: 'Generate Project [Mac]'
+      condition: succeededOrFailed()
 
     - script: './build-mac-all.sh'
       workingDirectory: ./build
       displayName: 'Build Project [Mac - All]'
+      condition: succeededOrFailed()
 
     - script: './test-mac-all.sh'
       workingDirectory: ./build
       displayName: 'Run Unit Tests [Mac - All]'
+      condition: succeededOrFailed()
 
     - task: CopyFiles@2
       displayName: 'Copy Artifacts To Staging [Mac]'
@@ -59,18 +63,22 @@ jobs:
 
     - checkout: self
       submodules: "true"
+      condition: succeededOrFailed()
 
     - script: 'generate-win.bat'
       workingDirectory: ./build
       displayName: 'Generate Project [Windows]'
+      condition: succeededOrFailed()
 
     - script: 'build-win-all.bat'
       workingDirectory: ./build
       displayName: 'Build Project [Windows - All]'
+      condition: succeededOrFailed()
 
     - script: 'test-win-all.bat'
       workingDirectory: ./build
       displayName: 'Run Unit Tests [Windows - All]'
+      condition: succeededOrFailed()
 
     - task: CopyFiles@2
       displayName: 'Copy Artifacts To Staging [Windows]'
@@ -99,18 +107,22 @@ jobs:
 
     - checkout: self
       submodules: "true"
+      condition: succeededOrFailed()
 
     - script: './generate-linux.sh'
       workingDirectory: ./build
       displayName: 'Generate Project [Linux]'
+      condition: succeededOrFailed()
 
     - script: './build-linux-all.sh'
       workingDirectory: ./build
       displayName: 'Build Project [Linux - All]'
+      condition: succeededOrFailed()
 
     - script: './test-linux-all.sh'
       workingDirectory: ./build
       displayName: 'Run Unit Tests [Linux - All]'
+      condition: succeededOrFailed()
 
     - task: CopyFiles@2
       displayName: 'Copy Artifacts To Staging [Linux - Debug]'
