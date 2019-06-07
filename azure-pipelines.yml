@@ -12,7 +12,7 @@ jobs:
     vmImage: macOS-10.14
   steps:
   - checkout: self
-    submodules: true | recursive
+    submodules: true
 
   - script: 'ls ./build'
     workingDirectory: '$(system.defaultworkingdirectory)'
