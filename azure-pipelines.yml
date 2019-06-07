@@ -19,10 +19,6 @@ jobs:
 
     - checkout: self
       submodules: "true"
-
-    - script: 'ls ./build'
-      workingDirectory: '$(system.defaultworkingdirectory)'
-      displayName: 'list builds folder'
       
     - script: './generate-mac.sh'
       workingDirectory: ./build
@@ -55,22 +51,26 @@ jobs:
     pool:
       vmImage: vs2017-win2016
     steps:
-    - task: CMake@1
-      displayName: 'CMake [VS2017]'
+    - task: InstallSSHKey@0
       inputs:
-        workingDirectory: build/win
-        cmakeArgs: '-G "Visual Studio 15 2017" -A x64 ../..'
+        hostName: github.com,192.30.255.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+        sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCjxr4aq5yc7aeuazmSXr9+7vtKqIizrQHlWj4jkyTY8++8U8lWeIaQLvmsFoejiw4Y8yQiAbmQZ/uq+0bsz2KUQIunz8E/7q3KEO/GzcX/fVmgxf09u4J9WTUGoQbMNL9svgpH6M2K3UZqBH9xbzjjF/ql99UDlK8gC/PudRZaXC7c85CIsAEJ9A5fwPKw71jRjW3lhjVtVMyN9r1B2FS8eklRurrx6z1z9nAqbfSJFk+JgS5wWBbnt1VhKfEryghwU2hUzdc//f2YfajyRfR7B1yUrJFD1CoiEKhTLib/L/ehM1pg+g/XZ116qLVmiSv4DiDruV9AQ7dQBAkuFmLW5YgAMRfH/3xBRYSqFRnaAds0/4DyeCQzZhMJRwGuy7eyGh4haCkxg8BjtJOVVpEfiBZ1PEr9wdmiy6EbBaU9qREsbJazyO3X+0tFnIQLdVJbi4DWnkUy4rJMcmkmx0cXDRgRikP/1ndK/51Ocvp5DYQ4yKfyvklVX8nWt4/eW4WO720YtpjMi2HBVk3VwoUnhUJa90lcOZlpJM+hZRSBi4s7unJV5cTNxIoZw2sW4BNBef7UVv1cJKdB8Q5XH2SxjMBeJTgS5fu5FT8MxFNFC7XnmLtCn9+X97w14hWAAjUFgBY2w2/DcVnbSpWK9FK61UxPUu190OjKNyQ4qG3DYQ== bmac6502@gmail.com
+        sshKeySecureFile: bmac6502_rsa
 
-    - task: VSBuild@1
-      displayName: 'Visual Studio build'
-      inputs:
-        solution: 'build/win/*.sln'
-        vsVersion: 15.0
-        msbuildArchitecture: x64
+    - checkout: self
+      submodules: "true"
 
-    - script: 'ctest -C Release'
-      workingDirectory: ./build/win/
-      displayName: 'Run Unit Tests'
+    - script: 'generate-win.bat'
+      workingDirectory: ./build
+      displayName: 'Generate Project [Windows]'
+
+    - script: 'build-win-all.bat'
+      workingDirectory: ./build
+      displayName: 'Build Project [Windows - All]'
+
+    - script: 'test-win-all.bat'
+      workingDirectory: ./build
+      displayName: 'Run Unit Tests [Windows - All]'
 
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
@@ -91,26 +91,26 @@ jobs:
     pool:
       vmImage: ubuntu-16.04
     steps:
-    - script: 'alias python=python3'
-      displayName: 'alias python'
-
-    - task: CMake@1
-      displayName: 'CMake [Unix]'
+    - task: InstallSSHKey@0
       inputs:
-        workingDirectory: build/linux
-        cmakeArgs: '-G "Unix Makefiles" ../..'
+        hostName: github.com,192.30.255.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+        sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCjxr4aq5yc7aeuazmSXr9+7vtKqIizrQHlWj4jkyTY8++8U8lWeIaQLvmsFoejiw4Y8yQiAbmQZ/uq+0bsz2KUQIunz8E/7q3KEO/GzcX/fVmgxf09u4J9WTUGoQbMNL9svgpH6M2K3UZqBH9xbzjjF/ql99UDlK8gC/PudRZaXC7c85CIsAEJ9A5fwPKw71jRjW3lhjVtVMyN9r1B2FS8eklRurrx6z1z9nAqbfSJFk+JgS5wWBbnt1VhKfEryghwU2hUzdc//f2YfajyRfR7B1yUrJFD1CoiEKhTLib/L/ehM1pg+g/XZ116qLVmiSv4DiDruV9AQ7dQBAkuFmLW5YgAMRfH/3xBRYSqFRnaAds0/4DyeCQzZhMJRwGuy7eyGh4haCkxg8BjtJOVVpEfiBZ1PEr9wdmiy6EbBaU9qREsbJazyO3X+0tFnIQLdVJbi4DWnkUy4rJMcmkmx0cXDRgRikP/1ndK/51Ocvp5DYQ4yKfyvklVX8nWt4/eW4WO720YtpjMi2HBVk3VwoUnhUJa90lcOZlpJM+hZRSBi4s7unJV5cTNxIoZw2sW4BNBef7UVv1cJKdB8Q5XH2SxjMBeJTgS5fu5FT8MxFNFC7XnmLtCn9+X97w14hWAAjUFgBY2w2/DcVnbSpWK9FK61UxPUu190OjKNyQ4qG3DYQ== bmac6502@gmail.com
+        sshKeySecureFile: bmac6502_rsa
 
-    - script: make
-      workingDirectory: build/linux
-      displayName: 'Makefile Build'
+    - checkout: self
+      submodules: "true"
 
-    - script: 'ctest -C Release'
-      workingDirectory: ./build/linux/
-      displayName: 'Run Unit Tests'
+    - script: './generate-linux.sh'
+      workingDirectory: ./build
+      displayName: 'Generate Project [Linux]'
 
-    - script: 'ls ./build/linux/src'
-      workingDirectory: '$(system.defaultworkingdirectory)'
-      displayName: 'list artifacts'
+    - script: './build-linux-all.sh'
+      workingDirectory: ./build
+      displayName: 'Build Project [Linux - All]'
+
+    - script: './test-linux-all.sh'
+      workingDirectory: ./build
+      displayName: 'Run Unit Tests [Linux - All]'
 
     - task: CopyFiles@2
       displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
