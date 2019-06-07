@@ -5,144 +5,167 @@
 
 trigger:
 - master
-    
-jobs:
-  - job: MacOS
-    pool:
-      vmImage: macOS-10.14
-    steps:
-    - task: InstallSSHKey@0
-      inputs:
-        hostName: github.com,192.30.255.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
-        sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCjxr4aq5yc7aeuazmSXr9+7vtKqIizrQHlWj4jkyTY8++8U8lWeIaQLvmsFoejiw4Y8yQiAbmQZ/uq+0bsz2KUQIunz8E/7q3KEO/GzcX/fVmgxf09u4J9WTUGoQbMNL9svgpH6M2K3UZqBH9xbzjjF/ql99UDlK8gC/PudRZaXC7c85CIsAEJ9A5fwPKw71jRjW3lhjVtVMyN9r1B2FS8eklRurrx6z1z9nAqbfSJFk+JgS5wWBbnt1VhKfEryghwU2hUzdc//f2YfajyRfR7B1yUrJFD1CoiEKhTLib/L/ehM1pg+g/XZ116qLVmiSv4DiDruV9AQ7dQBAkuFmLW5YgAMRfH/3xBRYSqFRnaAds0/4DyeCQzZhMJRwGuy7eyGh4haCkxg8BjtJOVVpEfiBZ1PEr9wdmiy6EbBaU9qREsbJazyO3X+0tFnIQLdVJbi4DWnkUy4rJMcmkmx0cXDRgRikP/1ndK/51Ocvp5DYQ4yKfyvklVX8nWt4/eW4WO720YtpjMi2HBVk3VwoUnhUJa90lcOZlpJM+hZRSBi4s7unJV5cTNxIoZw2sW4BNBef7UVv1cJKdB8Q5XH2SxjMBeJTgS5fu5FT8MxFNFC7XnmLtCn9+X97w14hWAAjUFgBY2w2/DcVnbSpWK9FK61UxPUu190OjKNyQ4qG3DYQ== bmac6502@gmail.com
-        sshKeySecureFile: bmac6502_rsa
 
-    - checkout: self
-      submodules: "true"
-      condition: succeededOrFailed()
-      
-    - script: './generate-mac.sh'
-      workingDirectory: ./build
-      displayName: 'Generate Project [Mac]'
-      condition: succeededOrFailed()
+stages:
+  - stage: Build
+    jobs:
+      - job: MacOS
+        pool:
+          vmImage: macOS-10.14
+        steps:
+        - task: InstallSSHKey@0
+          inputs:
+            hostName: github.com,192.30.255.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+            sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCjxr4aq5yc7aeuazmSXr9+7vtKqIizrQHlWj4jkyTY8++8U8lWeIaQLvmsFoejiw4Y8yQiAbmQZ/uq+0bsz2KUQIunz8E/7q3KEO/GzcX/fVmgxf09u4J9WTUGoQbMNL9svgpH6M2K3UZqBH9xbzjjF/ql99UDlK8gC/PudRZaXC7c85CIsAEJ9A5fwPKw71jRjW3lhjVtVMyN9r1B2FS8eklRurrx6z1z9nAqbfSJFk+JgS5wWBbnt1VhKfEryghwU2hUzdc//f2YfajyRfR7B1yUrJFD1CoiEKhTLib/L/ehM1pg+g/XZ116qLVmiSv4DiDruV9AQ7dQBAkuFmLW5YgAMRfH/3xBRYSqFRnaAds0/4DyeCQzZhMJRwGuy7eyGh4haCkxg8BjtJOVVpEfiBZ1PEr9wdmiy6EbBaU9qREsbJazyO3X+0tFnIQLdVJbi4DWnkUy4rJMcmkmx0cXDRgRikP/1ndK/51Ocvp5DYQ4yKfyvklVX8nWt4/eW4WO720YtpjMi2HBVk3VwoUnhUJa90lcOZlpJM+hZRSBi4s7unJV5cTNxIoZw2sW4BNBef7UVv1cJKdB8Q5XH2SxjMBeJTgS5fu5FT8MxFNFC7XnmLtCn9+X97w14hWAAjUFgBY2w2/DcVnbSpWK9FK61UxPUu190OjKNyQ4qG3DYQ== bmac6502@gmail.com
+            sshKeySecureFile: bmac6502_rsa
 
-    - script: './build-mac-all.sh'
-      workingDirectory: ./build
-      displayName: 'Build Project [Mac - All]'
-      condition: succeededOrFailed()
+        - checkout: self
+          submodules: "true"
+          condition: succeededOrFailed()
+          
+        - script: './generate-mac.sh'
+          workingDirectory: ./build
+          displayName: 'Generate Project [Mac]'
+          condition: succeededOrFailed()
 
-    - script: './test-mac-all.sh'
-      workingDirectory: ./build
-      displayName: 'Run Unit Tests [Mac - All]'
-      condition: succeededOrFailed()
+        - script: './build-mac-all.sh'
+          workingDirectory: ./build
+          displayName: 'Build Project [Mac - All]'
+          condition: succeededOrFailed()
 
-    - task: CopyFiles@2
-      displayName: 'Copy Artifacts To Staging [Mac]'
-      inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)/build/mac/bin'
-        Contents: '**'
-        TargetFolder: '$(build.artifactstagingdirectory)/mac'
-      condition: succeededOrFailed()
+        - script: './test-mac-all.sh'
+          workingDirectory: ./build
+          displayName: 'Run Unit Tests [Mac - All]'
+          condition: succeededOrFailed()
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: $(system.teamProject)'
-      inputs:
-        PathtoPublish: '$(build.artifactstagingdirectory)'
-        ArtifactName: '$(system.teamProject)'
-      condition: succeededOrFailed()
+        - task: CopyFiles@2
+          displayName: 'Copy Artifacts To Staging [Mac]'
+          inputs:
+            SourceFolder: '$(system.defaultworkingdirectory)/build/mac/bin'
+            Contents: '**'
+            TargetFolder: '$(build.artifactstagingdirectory)/mac'
+          condition: succeededOrFailed()
 
-  - job: Windows
-    pool:
-      vmImage: windows-2019
-    steps:
-    - task: InstallSSHKey@0
-      inputs:
-        hostName: github.com,192.30.255.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
-        sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCjxr4aq5yc7aeuazmSXr9+7vtKqIizrQHlWj4jkyTY8++8U8lWeIaQLvmsFoejiw4Y8yQiAbmQZ/uq+0bsz2KUQIunz8E/7q3KEO/GzcX/fVmgxf09u4J9WTUGoQbMNL9svgpH6M2K3UZqBH9xbzjjF/ql99UDlK8gC/PudRZaXC7c85CIsAEJ9A5fwPKw71jRjW3lhjVtVMyN9r1B2FS8eklRurrx6z1z9nAqbfSJFk+JgS5wWBbnt1VhKfEryghwU2hUzdc//f2YfajyRfR7B1yUrJFD1CoiEKhTLib/L/ehM1pg+g/XZ116qLVmiSv4DiDruV9AQ7dQBAkuFmLW5YgAMRfH/3xBRYSqFRnaAds0/4DyeCQzZhMJRwGuy7eyGh4haCkxg8BjtJOVVpEfiBZ1PEr9wdmiy6EbBaU9qREsbJazyO3X+0tFnIQLdVJbi4DWnkUy4rJMcmkmx0cXDRgRikP/1ndK/51Ocvp5DYQ4yKfyvklVX8nWt4/eW4WO720YtpjMi2HBVk3VwoUnhUJa90lcOZlpJM+hZRSBi4s7unJV5cTNxIoZw2sW4BNBef7UVv1cJKdB8Q5XH2SxjMBeJTgS5fu5FT8MxFNFC7XnmLtCn9+X97w14hWAAjUFgBY2w2/DcVnbSpWK9FK61UxPUu190OjKNyQ4qG3DYQ== bmac6502@gmail.com
-        sshKeySecureFile: bmac6502_rsa
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Artifact: $(system.teamProject)'
+          inputs:
+            PathtoPublish: '$(build.artifactstagingdirectory)'
+            ArtifactName: '$(system.teamProject)'
+          condition: succeededOrFailed()
 
-    - checkout: self
-      submodules: "true"
-      condition: succeededOrFailed()
+      - job: Windows
+        pool:
+          vmImage: windows-2019
+        steps:
+        - task: InstallSSHKey@0
+          inputs:
+            hostName: github.com,192.30.255.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+            sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCjxr4aq5yc7aeuazmSXr9+7vtKqIizrQHlWj4jkyTY8++8U8lWeIaQLvmsFoejiw4Y8yQiAbmQZ/uq+0bsz2KUQIunz8E/7q3KEO/GzcX/fVmgxf09u4J9WTUGoQbMNL9svgpH6M2K3UZqBH9xbzjjF/ql99UDlK8gC/PudRZaXC7c85CIsAEJ9A5fwPKw71jRjW3lhjVtVMyN9r1B2FS8eklRurrx6z1z9nAqbfSJFk+JgS5wWBbnt1VhKfEryghwU2hUzdc//f2YfajyRfR7B1yUrJFD1CoiEKhTLib/L/ehM1pg+g/XZ116qLVmiSv4DiDruV9AQ7dQBAkuFmLW5YgAMRfH/3xBRYSqFRnaAds0/4DyeCQzZhMJRwGuy7eyGh4haCkxg8BjtJOVVpEfiBZ1PEr9wdmiy6EbBaU9qREsbJazyO3X+0tFnIQLdVJbi4DWnkUy4rJMcmkmx0cXDRgRikP/1ndK/51Ocvp5DYQ4yKfyvklVX8nWt4/eW4WO720YtpjMi2HBVk3VwoUnhUJa90lcOZlpJM+hZRSBi4s7unJV5cTNxIoZw2sW4BNBef7UVv1cJKdB8Q5XH2SxjMBeJTgS5fu5FT8MxFNFC7XnmLtCn9+X97w14hWAAjUFgBY2w2/DcVnbSpWK9FK61UxPUu190OjKNyQ4qG3DYQ== bmac6502@gmail.com
+            sshKeySecureFile: bmac6502_rsa
 
-    - script: 'generate-win.bat'
-      workingDirectory: ./build
-      displayName: 'Generate Project [Windows]'
-      condition: succeededOrFailed()
+        - checkout: self
+          submodules: "true"
+          condition: succeededOrFailed()
 
-    - script: 'build-win-all.bat'
-      workingDirectory: ./build
-      displayName: 'Build Project [Windows - All]'
-      condition: succeededOrFailed()
+        - script: 'generate-win.bat'
+          workingDirectory: ./build
+          displayName: 'Generate Project [Windows]'
+          condition: succeededOrFailed()
 
-    - script: 'test-win-all.bat'
-      workingDirectory: ./build
-      displayName: 'Run Unit Tests [Windows - All]'
-      condition: succeededOrFailed()
+        - script: 'build-win-all.bat'
+          workingDirectory: ./build
+          displayName: 'Build Project [Windows - All]'
+          condition: succeededOrFailed()
 
-    - task: CopyFiles@2
-      displayName: 'Copy Artifacts To Staging [Windows]'
-      inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)/build/win/bin'
-        Contents: '**'
-        TargetFolder: '$(build.artifactstagingdirectory)/win'
-      condition: succeededOrFailed()
+        - script: 'test-win-all.bat'
+          workingDirectory: ./build
+          displayName: 'Run Unit Tests [Windows - All]'
+          condition: succeededOrFailed()
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: $(system.teamProject)'
-      inputs:
-        PathtoPublish: '$(build.artifactstagingdirectory)'
-        ArtifactName: '$(system.teamProject)'
-      condition: succeededOrFailed()
+        - task: CopyFiles@2
+          displayName: 'Copy Artifacts To Staging [Windows]'
+          inputs:
+            SourceFolder: '$(system.defaultworkingdirectory)/build/win/bin'
+            Contents: '**'
+            TargetFolder: '$(build.artifactstagingdirectory)/win'
+          condition: succeededOrFailed()
 
-  - job: Linux
-    pool:
-      vmImage: ubuntu-16.04
-    steps:
-    - task: InstallSSHKey@0
-      inputs:
-        hostName: github.com,192.30.255.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
-        sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCjxr4aq5yc7aeuazmSXr9+7vtKqIizrQHlWj4jkyTY8++8U8lWeIaQLvmsFoejiw4Y8yQiAbmQZ/uq+0bsz2KUQIunz8E/7q3KEO/GzcX/fVmgxf09u4J9WTUGoQbMNL9svgpH6M2K3UZqBH9xbzjjF/ql99UDlK8gC/PudRZaXC7c85CIsAEJ9A5fwPKw71jRjW3lhjVtVMyN9r1B2FS8eklRurrx6z1z9nAqbfSJFk+JgS5wWBbnt1VhKfEryghwU2hUzdc//f2YfajyRfR7B1yUrJFD1CoiEKhTLib/L/ehM1pg+g/XZ116qLVmiSv4DiDruV9AQ7dQBAkuFmLW5YgAMRfH/3xBRYSqFRnaAds0/4DyeCQzZhMJRwGuy7eyGh4haCkxg8BjtJOVVpEfiBZ1PEr9wdmiy6EbBaU9qREsbJazyO3X+0tFnIQLdVJbi4DWnkUy4rJMcmkmx0cXDRgRikP/1ndK/51Ocvp5DYQ4yKfyvklVX8nWt4/eW4WO720YtpjMi2HBVk3VwoUnhUJa90lcOZlpJM+hZRSBi4s7unJV5cTNxIoZw2sW4BNBef7UVv1cJKdB8Q5XH2SxjMBeJTgS5fu5FT8MxFNFC7XnmLtCn9+X97w14hWAAjUFgBY2w2/DcVnbSpWK9FK61UxPUu190OjKNyQ4qG3DYQ== bmac6502@gmail.com
-        sshKeySecureFile: bmac6502_rsa
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Artifact: $(system.teamProject)'
+          inputs:
+            PathtoPublish: '$(build.artifactstagingdirectory)'
+            ArtifactName: '$(system.teamProject)'
+          condition: succeededOrFailed()
 
-    - checkout: self
-      submodules: "true"
-      condition: succeededOrFailed()
+      - job: Linux
+        pool:
+          vmImage: ubuntu-16.04
+        steps:
+        - task: InstallSSHKey@0
+          inputs:
+            hostName: github.com,192.30.255.112 ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ==
+            sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCjxr4aq5yc7aeuazmSXr9+7vtKqIizrQHlWj4jkyTY8++8U8lWeIaQLvmsFoejiw4Y8yQiAbmQZ/uq+0bsz2KUQIunz8E/7q3KEO/GzcX/fVmgxf09u4J9WTUGoQbMNL9svgpH6M2K3UZqBH9xbzjjF/ql99UDlK8gC/PudRZaXC7c85CIsAEJ9A5fwPKw71jRjW3lhjVtVMyN9r1B2FS8eklRurrx6z1z9nAqbfSJFk+JgS5wWBbnt1VhKfEryghwU2hUzdc//f2YfajyRfR7B1yUrJFD1CoiEKhTLib/L/ehM1pg+g/XZ116qLVmiSv4DiDruV9AQ7dQBAkuFmLW5YgAMRfH/3xBRYSqFRnaAds0/4DyeCQzZhMJRwGuy7eyGh4haCkxg8BjtJOVVpEfiBZ1PEr9wdmiy6EbBaU9qREsbJazyO3X+0tFnIQLdVJbi4DWnkUy4rJMcmkmx0cXDRgRikP/1ndK/51Ocvp5DYQ4yKfyvklVX8nWt4/eW4WO720YtpjMi2HBVk3VwoUnhUJa90lcOZlpJM+hZRSBi4s7unJV5cTNxIoZw2sW4BNBef7UVv1cJKdB8Q5XH2SxjMBeJTgS5fu5FT8MxFNFC7XnmLtCn9+X97w14hWAAjUFgBY2w2/DcVnbSpWK9FK61UxPUu190OjKNyQ4qG3DYQ== bmac6502@gmail.com
+            sshKeySecureFile: bmac6502_rsa
 
-    - script: './generate-linux.sh'
-      workingDirectory: ./build
-      displayName: 'Generate Project [Linux]'
-      condition: succeededOrFailed()
+        - checkout: self
+          submodules: "true"
+          condition: succeededOrFailed()
 
-    - script: './build-linux-all.sh'
-      workingDirectory: ./build
-      displayName: 'Build Project [Linux - All]'
-      condition: succeededOrFailed()
+        - script: './generate-linux.sh'
+          workingDirectory: ./build
+          displayName: 'Generate Project [Linux]'
+          condition: succeededOrFailed()
 
-    - script: './test-linux-all.sh'
-      workingDirectory: ./build
-      displayName: 'Run Unit Tests [Linux - All]'
-      condition: succeededOrFailed()
+        - script: './build-linux-all.sh'
+          workingDirectory: ./build
+          displayName: 'Build Project [Linux - All]'
+          condition: succeededOrFailed()
 
-    - task: CopyFiles@2
-      displayName: 'Copy Artifacts To Staging [Linux - Debug]'
-      inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)/build/linux/debug/bin'
-        Contents: '**'
-        TargetFolder: '$(build.artifactstagingdirectory)/linux'
-      condition: succeededOrFailed()
+        - script: './test-linux-all.sh'
+          workingDirectory: ./build
+          displayName: 'Run Unit Tests [Linux - All]'
+          condition: succeededOrFailed()
 
-    - task: CopyFiles@2
-      displayName: 'Copy Artifacts To Staging [Linux - Release]'
-      inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)/build/linux/release/bin'
-        Contents: '**'
-        TargetFolder: '$(build.artifactstagingdirectory)/linux'
-      condition: succeededOrFailed()
+        - task: CopyFiles@2
+          displayName: 'Copy Artifacts To Staging [Linux - Debug]'
+          inputs:
+            SourceFolder: '$(system.defaultworkingdirectory)/build/linux/debug/bin'
+            Contents: '**'
+            TargetFolder: '$(build.artifactstagingdirectory)/linux'
+          condition: succeededOrFailed()
 
-    - task: PublishBuildArtifacts@1
-      displayName: 'Publish Artifact: $(system.teamProject)'
-      inputs:
-        PathtoPublish: '$(build.artifactstagingdirectory)'
-        ArtifactName: '$(system.teamProject)'
-      condition: succeededOrFailed()
+        - task: CopyFiles@2
+          displayName: 'Copy Artifacts To Staging [Linux - Release]'
+          inputs:
+            SourceFolder: '$(system.defaultworkingdirectory)/build/linux/release/bin'
+            Contents: '**'
+            TargetFolder: '$(build.artifactstagingdirectory)/linux'
+          condition: succeededOrFailed()
+
+        - task: PublishBuildArtifacts@1
+          displayName: 'Publish Artifact: $(system.teamProject)'
+          inputs:
+            PathtoPublish: '$(build.artifactstagingdirectory)'
+            ArtifactName: '$(system.teamProject)'
+          condition: succeededOrFailed()
+
+  - stage: Deploy
+    jobs:
+    - job:
+      steps:
+      - task: DownloadBuildArtifacts@0
+        inputs:
+          buildType: 'current'
+          downloadType: 'single'
+          artifactName: '$(system.teamProject)'
+          downloadPath: $(System.ArtifactsDirectory)
+
+      - task: FtpUpload@2
+        displayName: 'FTP Upload'
+        inputs:
+          serverEndpoint: 'Bluehost FTP'
+          rootDirectory: '$(System.ArtifactsDirectory)'
+          filePatterns: '**'
+          remoteDirectory: '/public_html/dev/shademachine/$(Build.BuildId)'
+          cleanContents: true
+
