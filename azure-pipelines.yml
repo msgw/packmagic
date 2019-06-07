@@ -33,11 +33,11 @@ jobs:
       displayName: 'Run Unit Tests [Mac - All]'
 
     - task: CopyFiles@2
-      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      displayName: 'Copy Artifacts To Staging [Mac]'
       inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)'
-        Contents: '$(artifacts.Mac)'
-        TargetFolder: '$(build.artifactstagingdirectory)'
+        SourceFolder: '$(system.defaultworkingdirectory)/build/mac/bin'
+        Contents: '**'
+        TargetFolder: '$(build.artifactstagingdirectory)/mac'
       condition: succeededOrFailed()
 
     - task: PublishBuildArtifacts@1
@@ -73,11 +73,11 @@ jobs:
       displayName: 'Run Unit Tests [Windows - All]'
 
     - task: CopyFiles@2
-      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      displayName: 'Copy Artifacts To Staging [Windows]'
       inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)'
-        Contents: '$(artifacts.Windows)'
-        TargetFolder: '$(build.artifactstagingdirectory)'
+        SourceFolder: '$(system.defaultworkingdirectory)/build/win/bin'
+        Contents: '**'
+        TargetFolder: '$(build.artifactstagingdirectory)/win'
       condition: succeededOrFailed()
 
     - task: PublishBuildArtifacts@1
@@ -113,11 +113,11 @@ jobs:
       displayName: 'Run Unit Tests [Linux - All]'
 
     - task: CopyFiles@2
-      displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+      displayName: 'Copy Artifacts To Staging [Windows]'
       inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)'
-        Contents: '$(artifacts.Linux)'
-        TargetFolder: '$(build.artifactstagingdirectory)'
+        SourceFolder: '$(system.defaultworkingdirectory)/build/linux/bin'
+        Contents: '**'
+        TargetFolder: '$(build.artifactstagingdirectory)/linux'
       condition: succeededOrFailed()
 
     - task: PublishBuildArtifacts@1
