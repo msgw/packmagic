@@ -6,10 +6,11 @@
 trigger:
 - master
 
-stages:
-- stage: Checkout
+- stage: Build      
   jobs:
-  - job:
+  - job: MacOS
+    pool:
+      vmImage: macOS-10.14
     steps:
     - task: InstallSSHKey@0
       inputs:
@@ -19,13 +20,6 @@ stages:
 
     - checkout: self
       submodules: "true"
-
-- stage: Build      
-  jobs:
-  - job: MacOS
-    pool:
-      vmImage: macOS-10.14
-    steps:
 
     - script: 'ls ./build'
       workingDirectory: '$(system.defaultworkingdirectory)'
