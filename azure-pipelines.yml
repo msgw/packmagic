@@ -11,6 +11,9 @@ jobs:
   pool:
     vmImage: macOS-10.14
   steps:
+  - checkout: self
+    submodules: true
+
   - script: './generate-mac.sh'
     workingDirectory: ./build
     displayName: 'Generate Project [Mac]'
