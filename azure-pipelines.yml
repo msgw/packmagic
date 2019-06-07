@@ -6,13 +6,15 @@
 trigger:
 - master
 
-
-
 jobs:
 - job: MacOS
   pool:
     vmImage: macOS-10.14
   steps:
+  - script: 'ls ./build'
+    workingDirectory: '$(system.defaultworkingdirectory)'
+    displayName: 'list builds folder'
+
   - checkout: self
     submodules: true | recursive
 
