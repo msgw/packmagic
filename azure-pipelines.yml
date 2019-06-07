@@ -8,6 +8,7 @@ trigger:
 
 stages:
   - stage: Build
+    condition: eq(variables['stage'], 'Build')
     jobs:
       - job: MacOS
         pool:
@@ -149,22 +150,24 @@ stages:
             ArtifactName: '$(system.teamProject)'
           condition: succeededOrFailed()
 
-# - stage: Deploy
-#   jobs:
-#   - job:
-#     steps:
-#     - task: DownloadBuildArtifacts@0
-#       inputs:
-#         buildType: 'current'
-#         downloadType: 'single'
-#         artifactName: '$(system.teamProject)'
-#         downloadPath: $(System.ArtifactsDirectory)
-#
-#     - task: FtpUpload@2
-#       displayName: 'FTP Upload'
-#       inputs:
-#         serverEndpoint: 'Bluehost FTP'
-#         rootDirectory: '$(System.ArtifactsDirectory)'
-#         filePatterns: '**'
-#         remoteDirectory: '/public_html/dev/packmagic/$(Build.BuildId)'
-#         cleanContents: true
+  - stage: Deploy
+    condition: eq(variables['stage'], 'Deploy')
+    jobs:
+    - job:
+      steps:
+      - task: DownloadBuildArtifacts@0
+        inputs:
+          buildType: 'current'
+          downloadType: 'single'
+          artifactName: '$(system.teamProject)'
+          downloadPath: $(System.ArtifactsDirectory)
+
+      - task: FtpUpload@2
+        displayName: 'FTP Upload'
+        inputs:
+          serverEndpoint: 'Bluehost FTP'
+          rootDirectory: '$(System.ArtifactsDirectory)'
+          filePatterns: '**'
+          remoteDirectory: '/public_html/dev/packmagic/$(Build.BuildId)'
+          cleanContents: true
+  
