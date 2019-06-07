@@ -11,13 +11,13 @@ jobs:
   pool:
     vmImage: macOS-10.14
   steps:
-  - script: 'ls ./build'
-    workingDirectory: '$(system.defaultworkingdirectory)'
-    displayName: 'list builds folder'
-
   - checkout: self
     submodules: true | recursive
 
+  - script: 'ls ./build'
+    workingDirectory: '$(system.defaultworkingdirectory)'
+    displayName: 'list builds folder'
+    
   - script: './generate-mac.sh'
     workingDirectory: ./build
     displayName: 'Generate Project [Mac]'
