@@ -166,6 +166,6 @@ stages:
           serverEndpoint: 'Bluehost FTP'
           rootDirectory: '$(System.ArtifactsDirectory)'
           filePatterns: '**'
-          remoteDirectory: '/public_html/dev/shademachine/$(Build.BuildId)'
+          remoteDirectory: '/public_html/dev/packmagic/$(Build.BuildId)'
           cleanContents: true
 
