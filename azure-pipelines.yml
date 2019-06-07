@@ -5,9 +5,8 @@
 
 trigger:
 - master
-
-- stage: Build      
-  jobs:
+    
+jobs:
   - job: MacOS
     pool:
       vmImage: macOS-10.14
