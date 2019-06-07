@@ -113,9 +113,17 @@ jobs:
       displayName: 'Run Unit Tests [Linux - All]'
 
     - task: CopyFiles@2
-      displayName: 'Copy Artifacts To Staging [Windows]'
+      displayName: 'Copy Artifacts To Staging [Linux - Debug]'
       inputs:
-        SourceFolder: '$(system.defaultworkingdirectory)/build/linux/bin'
+        SourceFolder: '$(system.defaultworkingdirectory)/build/linux/debug/bin'
+        Contents: '**'
+        TargetFolder: '$(build.artifactstagingdirectory)/linux'
+      condition: succeededOrFailed()
+
+    - task: CopyFiles@2
+      displayName: 'Copy Artifacts To Staging [Linux - Release]'
+      inputs:
+        SourceFolder: '$(system.defaultworkingdirectory)/build/linux/release/bin'
         Contents: '**'
         TargetFolder: '$(build.artifactstagingdirectory)/linux'
       condition: succeededOrFailed()
