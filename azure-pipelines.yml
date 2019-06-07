@@ -15,7 +15,7 @@ stages:
       inputs:
         hostName: github.com
         sshPublicKey: ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCjxr4aq5yc7aeuazmSXr9+7vtKqIizrQHlWj4jkyTY8++8U8lWeIaQLvmsFoejiw4Y8yQiAbmQZ/uq+0bsz2KUQIunz8E/7q3KEO/GzcX/fVmgxf09u4J9WTUGoQbMNL9svgpH6M2K3UZqBH9xbzjjF/ql99UDlK8gC/PudRZaXC7c85CIsAEJ9A5fwPKw71jRjW3lhjVtVMyN9r1B2FS8eklRurrx6z1z9nAqbfSJFk+JgS5wWBbnt1VhKfEryghwU2hUzdc//f2YfajyRfR7B1yUrJFD1CoiEKhTLib/L/ehM1pg+g/XZ116qLVmiSv4DiDruV9AQ7dQBAkuFmLW5YgAMRfH/3xBRYSqFRnaAds0/4DyeCQzZhMJRwGuy7eyGh4haCkxg8BjtJOVVpEfiBZ1PEr9wdmiy6EbBaU9qREsbJazyO3X+0tFnIQLdVJbi4DWnkUy4rJMcmkmx0cXDRgRikP/1ndK/51Ocvp5DYQ4yKfyvklVX8nWt4/eW4WO720YtpjMi2HBVk3VwoUnhUJa90lcOZlpJM+hZRSBi4s7unJV5cTNxIoZw2sW4BNBef7UVv1cJKdB8Q5XH2SxjMBeJTgS5fu5FT8MxFNFC7XnmLtCn9+X97w14hWAAjUFgBY2w2/DcVnbSpWK9FK61UxPUu190OjKNyQ4qG3DYQ== bmac6502@gmail.com
-        sshKeySecureFile: githubkey
+        sshKeySecureFile: bmac6502_rsa
 
     - checkout: self
       submodules: "true"
